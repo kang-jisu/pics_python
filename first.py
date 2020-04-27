@@ -1,6 +1,6 @@
 from flask import Flask, render_template, redirect, request, url_for
 from werkzeug.utils import secure_filename
-import datetime
+from datetime import timedelta, datetime
 try:
     # The typical way to import flask-cors
     from flask_cors import CORS
@@ -56,14 +56,26 @@ def hello_user(userName):
 # api 
 @app.route('/file',methods=['POST'])
 def getFile(file=None):
-    result = {"text":"error","date":None}
+    result = {"text":None,}
     if request.method == 'POST':
         if 'file' not in request.files:
             return 'File is missing', 404
     
         pic_data = request.files['file']
         result["text"] = OCR(pic_data)
-        result["date"]=datetime.datetime.now()
+        startDate = datetime.now().timetuple()
+        endDate = datetime.now().timetuple()
+
+        result["startYear"]=startDate.tm_year
+        result["startMonth"]=startDate.tm_mon
+        result["startDay"]=startDate.tm_mday
+        result["startHour"]=startDate.tm_hour
+        result["startMin"]=startDate.tm_min
+        result["endYear"]=endDate.tm_year
+        result["endMonth"]=endDate.tm_mon
+        result["endDay"]=endDate.tm_mday
+        result["endHour"]=endDate.tm_hour
+        result["endMin"]=endDate.tm_min
         print(result)
     return result
  
