@@ -1,5 +1,6 @@
 from flask import Flask, render_template, redirect, request, url_for
 from werkzeug.utils import secure_filename
+import datetime
 try:
     # The typical way to import flask-cors
     from flask_cors import CORS
@@ -55,16 +56,16 @@ def hello_user(userName):
 # api 
 @app.route('/file',methods=['POST'])
 def getFile(file=None):
-    text = "error"
+    result = {"text":"error","date":None}
     if request.method == 'POST':
         if 'file' not in request.files:
             return 'File is missing', 404
     
         pic_data = request.files['file']
-        text = OCR(pic_data)
-
-        print(text)
-    return text
+        result["text"] = OCR(pic_data)
+        result["date"]=datetime.datetime.now()
+        print(result)
+    return result
  
 
 
