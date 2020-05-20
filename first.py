@@ -13,6 +13,14 @@ except ImportError:
     from flask_cors import cross_origin
 
 from konlpy.tag import Okt
+
+import sys
+import time
+import re
+from bs4 import BeautifulSoup
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+
 okt = Okt()
  
 okt.morphs     #형태소 분석
@@ -78,7 +86,56 @@ def getFile(file=None):
         result["endMin"]=endDate.tm_min
         print(result)
     return result
- 
+
+@app.route('/cr')
+def crolling():
+
+    options = webdriver.ChromeOptions()
+    options.add_argument('headless')
+
+    driver_path = "./chromedriver"
+    driver = webdriver.Chrome(driver_path,chrome_options=options)
+
+    target_url = "http://www.saramin.co.kr/zf_user/tools/character-counter"                                              # target url
+
+
+    key_words = [ '우리 월욜에만나!!ㅋㅋ' ]
+    result = None
+    for word in key_words:
+        driver.get(target_url)
+        search_window = driver.find_element_by_name("content")  # search window
+
+        search_window.send_keys(word)
+        #맞춤법 검사버튼 클릭
+        btn = driver.find_element_by_id("spell_check")
+        btn.click();
+
+        time.sleep(1)
+
+        #맞춤법 일괄 변경 클릭
+        editBtn = driver.find_element_by_id("spell_done_all")
+        #print(editBtn)
+        #editBtn.click();
+        editBtn.send_keys('\n')  
+
+        time.sleep(0.5)
+
+        html = driver.page_source
+        soup = BeautifulSoup(html, 'html.parser')
+        result = str(soup.select("#checker_preview"))
+
+        #태그 제거
+        result = re.sub('<.+?>', '', result, 0).strip();
+
+        print(result)
+        # result = driver.find_element_by_class_name("wrong solved")
+        # print(result)
+
+
+        print()
+
+        time.sleep(2)
+    return result
 
 
 if __name__ == "__main__":
