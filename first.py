@@ -80,10 +80,8 @@ def crolling(file=None):
         print(new_path,'파일 생성')
         pic_data.save(new_path)
 
-        image_name = new_path   # 절대경로
-
         #문장 가져오기!
-        sentences = itt.image_to_text(image_name)
+        sentences = itt.image_to_text(new_path)
         print(sentences)
 
         result["text"] = filename
@@ -157,7 +155,7 @@ def crolling(file=None):
             # time.sleep(2)
         if os.path.isfile(new_path):
             os.remove(new_path)
-            print(new_path'파일 삭제')
+            print(new_path,'파일 삭제')
 
     return result
 
