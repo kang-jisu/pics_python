@@ -15,7 +15,7 @@ class TextDetection:
 
     def detect_text(self, path):
         """Detects text in the file."""
-
+        
         with io.open(path, 'rb') as image_file:
             content = image_file.read()
 

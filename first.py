@@ -13,7 +13,7 @@ except ImportError:
     from flask_cors import cross_origin
 
 from konlpy.tag import Okt
-
+import os
 import sys
 import time
 import re
@@ -42,7 +42,7 @@ def getFile(file=None):
             return 'File is missing', 404
     
         pic_data = request.files['file']
-        result["text"] = OCR(pic_data)
+        result["text"] = secure_filename(pic_data.filename) 
         startYear = 2020
         startMonth = 5
         startDay = 27
@@ -77,9 +77,9 @@ def crolling(file=None):
         pic_data = request.files['file'] # 받은 파일
         filename = secure_filename(pic_data.filename) #파일 이름
         new_path = os.path.abspath(filename)  # 파일의 절대 경로
+        pic_data.save(new_path)
 
-
-        image_name = new_path    #이부분 cwd+파일명으로 구현되어 있는데 절대경로가 나으면 수정할 수 있습니다!
+        image_name = new_path   # 절대경로
 
         #문장 가져오기!
         sentences = itt.image_to_text(image_name)
@@ -109,51 +109,57 @@ def crolling(file=None):
         result["endMin"]=endDate.tm_min
         print(result)
 
-    options = webdriver.ChromeOptions()
-    options.add_argument('headless')
+        options = webdriver.ChromeOptions()
+        options.add_argument('headless')
 
-    driver_path = "./chromedriver"
-    driver = webdriver.Chrome(driver_path,chrome_options=options)
+        driver_path = "./chromedriver"
+        driver = webdriver.Chrome(driver_path,chrome_options=options)
 
-    target_url = "http://www.saramin.co.kr/zf_user/tools/character-counter"                                              # target url
-
-
-    key_words = [ '우리 월욜에만나!!ㅋㅋ' ]
-    resultCroll = None
-    for word in key_words:
-        driver.get(target_url)
-        search_window = driver.find_element_by_name("content")  # search window
-
-        search_window.send_keys(word)
-        #맞춤법 검사버튼 클릭
-        btn = driver.find_element_by_id("spell_check")
-        btn.click();
-
-        time.sleep(1)
-
-        #맞춤법 일괄 변경 클릭
-        editBtn = driver.find_element_by_id("spell_done_all")
-        #print(editBtn)
-        #editBtn.click();
-        editBtn.send_keys('\n')  
-
-        time.sleep(0.5)
-
-        html = driver.page_source
-        soup = BeautifulSoup(html, 'html.parser')
-        resultCroll = str(soup.select("#checker_preview"))
-
-        #태그 제거
-        resultCroll = re.sub('<.+?>', '', resultCroll, 0).strip();
-
-        print(resultCroll)
-        # result = driver.find_element_by_class_name("wrong solved")
-        # print(result)
+        target_url = "http://www.saramin.co.kr/zf_user/tools/character-counter"                                              # target url
 
 
-        print()
+        key_words = sentences
+        resultCroll = None
+        for word in key_words:
+            driver.get(target_url)
+            search_window = driver.find_element_by_name("content")  # search window
 
-        time.sleep(2)
+            search_window.send_keys(word)
+            #맞춤법 검사버튼 클릭
+            btn = driver.find_element_by_id("spell_check")
+            btn.click();
+
+            time.sleep(1)
+
+            #맞춤법 일괄 변경 클릭
+            editBtn = driver.find_element_by_id("spell_done_all")
+            #print(editBtn)
+            #editBtn.click();
+            editBtn.send_keys('\n')  
+
+            time.sleep(0.5)
+
+            html = driver.page_source
+            soup = BeautifulSoup(html, 'html.parser')
+            resultCroll = str(soup.select("#checker_preview"))
+
+            #태그 제거
+            resultCroll = re.sub('<.+?>', '', resultCroll, 0).strip();
+
+            print(resultCroll)
+            # result = driver.find_element_by_class_name("wrong solved")
+            # print(result)
+
+
+            print()
+
+            time.sleep(2)
+            def generate():
+                with open(new_path) as f:
+                    yield from f
+
+                os.remove(new_path)
+
     return result
 
 

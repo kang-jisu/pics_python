@@ -9,8 +9,8 @@ class ImageToText:
         self.CWD_PATH = os.getcwd()
 
     def image_to_text(self, path):
-        # img_path = os.path.join(self.CWD_PATH, path)
-        img_path = os.path.join(path)
+        img_path = os.path.join(self.CWD_PATH, path)
+        # img_path = os.path.join(path)
         sentences = self.td.detect_document(img_path)
         boxes = self.sd.detect_boundings(img_path)
 
