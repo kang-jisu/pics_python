@@ -77,6 +77,7 @@ def crolling(file=None):
         pic_data = request.files['file'] # 받은 파일
         filename = secure_filename(pic_data.filename) #파일 이름
         new_path = os.path.abspath(filename)  # 파일의 절대 경로
+        print(new_path,'파일 생성')
         pic_data.save(new_path)
 
         image_name = new_path   # 절대경로
@@ -156,8 +157,7 @@ def crolling(file=None):
             # time.sleep(2)
         if os.path.isfile(new_path):
             os.remove(new_path)
-
-            return 'okay'
+            print(new_path'파일 삭제')
 
     return result
 
