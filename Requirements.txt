@@ -1,0 +1,10 @@
+tensorflow==1.13.1
+h5py==2.8.0
+numpy
+protobuf
+pillow
+lxml
+Cython
+matplotlib
+pandas
+opencv-python
