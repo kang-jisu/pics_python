@@ -76,14 +76,14 @@ def crolling(file=None):
     
         pic_data = request.files['file'] # 받은 파일
         filename = secure_filename(pic_data.filename) #파일 이름
-        # new_path = os.path.abspath(filename)  # 파일의 절대 경로
+        new_path = os.path.abspath(filename)  # 파일의 절대 경로
 
 
-        # image_name = new_path    #이부분 cwd+파일명으로 구현되어 있는데 절대경로가 나으면 수정할 수 있습니다!
+        image_name = new_path    #이부분 cwd+파일명으로 구현되어 있는데 절대경로가 나으면 수정할 수 있습니다!
 
-        # #문장 가져오기!
-        # sentences = itt.image_to_text(image_name)
-        # print(sentences)
+        #문장 가져오기!
+        sentences = itt.image_to_text(image_name)
+        print(sentences)
 
         result["text"] = filename
         startYear = 2020
