@@ -98,35 +98,35 @@ def getFile(file=None):
 @app.route('/fileandcroll',methods=['POST'])
 def crolling(file=None):
     result = {"text":None,}
-        if request.method == 'POST':
-            if 'file' not in request.files:
-                return 'File is missing', 404
-        
-            pic_data = request.files['file']
-            result["text"] = OCR(pic_data)
-            startYear = 2020
-            startMonth = 5
-            startDay = 27
-            startHour = 23
-            startMin = 11
-            startDate = datetime(startYear,startMonth,startDay,startHour,startMin)
+    if request.method == 'POST':
+        if 'file' not in request.files:
+            return 'File is missing', 404
+    
+        pic_data = request.files['file']
+        result["text"] = OCR(pic_data)
+        startYear = 2020
+        startMonth = 5
+        startDay = 27
+        startHour = 23
+        startMin = 11
+        startDate = datetime(startYear,startMonth,startDay,startHour,startMin)
 
-            endDate = startDate + timedelta(hours=1)
-            endDate = endDate.timetuple()
-            startDate = startDate.timetuple()
+        endDate = startDate + timedelta(hours=1)
+        endDate = endDate.timetuple()
+        startDate = startDate.timetuple()
 
-            result["startYear"]=startDate.tm_year
-            result["startMonth"]=startDate.tm_mon
-            result["startDay"]=startDate.tm_mday
-            result["startHour"]=startDate.tm_hour
-            result["startMin"]=startDate.tm_min
-            result["endYear"]=endDate.tm_year
-            result["endMonth"]=endDate.tm_mon
-            result["endDay"]=endDate.tm_mday
-            result["endHour"]=endDate.tm_hour
-            result["endMin"]=endDate.tm_min
-            print(result)
-            
+        result["startYear"]=startDate.tm_year
+        result["startMonth"]=startDate.tm_mon
+        result["startDay"]=startDate.tm_mday
+        result["startHour"]=startDate.tm_hour
+        result["startMin"]=startDate.tm_min
+        result["endYear"]=endDate.tm_year
+        result["endMonth"]=endDate.tm_mon
+        result["endDay"]=endDate.tm_mday
+        result["endHour"]=endDate.tm_hour
+        result["endMin"]=endDate.tm_min
+        print(result)
+
     options = webdriver.ChromeOptions()
     options.add_argument('headless')
 
