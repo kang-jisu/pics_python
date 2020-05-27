@@ -153,12 +153,11 @@ def crolling(file=None):
 
             print()
 
-            time.sleep(2)
-            def generate():
-                with open(new_path) as f:
-                    yield from f
+            # time.sleep(2)
+        if os.path.isfile(new_path):
+            os.remove(new_path)
 
-                os.remove(new_path)
+            return 'okay'
 
     return result
 
