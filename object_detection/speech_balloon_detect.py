@@ -12,9 +12,9 @@ class SpeechBalloonDetector:
                 
         # This is needed since the notebook is stored in the object_detection folder.
         sys.path.append("..")
-        from utils import label_map_util    
-        from utils import visualization_utils as vis_util
-        import select_bounding_boxes as sb_util
+        from object_detection.utils import label_map_util    
+        from object_detection.utils import visualization_utils as vis_util
+        import object_detection.select_bounding_boxes as sb_util
 
         # Name of the directory containing the object detection module we're using
         self.MODEL_NAME = 'inference_graph'
@@ -55,9 +55,9 @@ class SpeechBalloonDetector:
 
     def detect_boundings(self, path):
         sys.path.append("..")
-        from utils import label_map_util    
-        from utils import visualization_utils as vis_util
-        import select_bounding_boxes as sb_util
+        from object_detection.utils import label_map_util    
+        from object_detection.utils import visualization_utils as vis_util
+        import object_detection.select_bounding_boxes as sb_util
         
         #IMAGE_NAME = path
         # Path to image
