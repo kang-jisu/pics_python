@@ -6,7 +6,6 @@ import tensorflow as tf
 import sys
 
 # Import utilites
-from utils import label_map_util
 from utils import visualization_utils as vis_util
 import select_bounding_boxes as sb_util
 
@@ -15,6 +14,7 @@ class SpeechBalloonDetector:
                 
         # This is needed since the notebook is stored in the object_detection folder.
         sys.path.append("..")
+        from utils import label_map_util    
 
         # Name of the directory containing the object detection module we're using
         self.MODEL_NAME = 'inference_graph'
