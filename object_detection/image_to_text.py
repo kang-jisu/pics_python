@@ -1,5 +1,5 @@
 from object_detection.speech_balloon_detect import SpeechBalloonDetector
-from object_detection.cr.OCR import TextDetection
+from object_detection.ocr.OCR import TextDetection
 import os
 
 class ImageToText:
