@@ -17,6 +17,8 @@ import os
 import sys
 import time
 import re
+import os
+
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
