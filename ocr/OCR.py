@@ -1,6 +1,14 @@
 from google.cloud import vision
 import io
 
+import argparse
+from enum import Enum
+#import io
+#from google.cloud import vision
+from google.cloud.vision import types
+from PIL import Image, ImageDraw
+
+
 class TextDetection:
     def __init__(self):
         self.client = vision.ImageAnnotatorClient()
@@ -35,3 +43,37 @@ class TextDetection:
                     response.error.message))
             
         return bounds, texts
+
+    def detect_document(self, path):
+        """Detects document features in an image."""
+
+        # [START vision_python_migration_document_text_detection]
+        with io.open(path, 'rb') as image_file:
+            content = image_file.read()
+
+        image = vision.types.Image(content=content)
+
+        response = self.client.document_text_detection(image=image)
+
+        sentences = []
+        word_list = []
+        for page in response.full_text_annotation.pages:
+            for block in page.blocks:
+                for paragraph in block.paragraphs:
+                    for word in paragraph.words:
+                        word_text = ''.join([
+                            symbol.text for symbol in word.symbols
+                        ])
+                        word_list.append(word_text)
+                    sentence = ' '.join([w for w in word_list])
+                    sentences.append(tuple((paragraph.bounding_box, sentence)))
+                    word_list = []
+
+
+        if response.error.message:
+            raise Exception(
+                '{}\nFor more info on error messages, check: '
+                'https://cloud.google.com/apis/design/errors'.format(
+                    response.error.message))
+
+        return sentences
