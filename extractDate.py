@@ -9,39 +9,30 @@ import math
 from datetime import timedelta, datetime
 
 def change_num(text):
-    if text=="일": return 1
-    elif text=="이": return 2
-    elif text=="삼": return 3
-    elif text=="사": return 4
-    elif text=="오": return 5
-    elif (text=="육" or text=="유"): return 6
-    elif text=="칠": return 7
-    elif text=="팔": return 8
-    elif text=="구": return 9
-    elif (text=="십" or text=="시"): return 10
-    elif text=="십일": return 11
-    elif text=="십이": return 12
-    elif text=="십삼": return 13
-    elif text=="십사": return 14
-    elif text=="십오": return 15
-    elif text=="십육": return 16
-    elif text=="십칠": return 17
-    elif text=="십팔": return 18
-    elif text=="십구": return 19
-    elif text=="이십": return 20
-    elif text=="이십일": return 21
-    elif text=="이십이": return 22
-    elif text=="이십삼": return 23
-    elif text=="이십사": return 24
-    elif text=="이십오": return 25
-    elif text=="이십육": return 26
-    elif text=="이십칠": return 27
-    elif text=="이십팔": return 28
-    elif text=="이십구": return 29
-    elif text=="삼십": return 30
-    elif text=="삼십일": return 31
-    else: return 1
+    tlen = len(text)
+    result = 1
+    if tlen==1:
+        if text=="십": result = 10
+        if text=="유": result = 6
+        if text=="시": result = 10
+        else : result = "일이삼사오육칠팔구".index(text) +1
+    else:
+        if bool(re.search(r"삼십",text)): # 30
+            if text=="삼십": result = 30
+            else : result = 31
+        
+        elif bool(re.search(r"이십",text)): # 20
+            if text=="이십": result = 20
+            else :
+                result = 20
+                result += "일이삼사오육칠팔구".index(text[2])+1
+        else:
+            result = 10
+            result += "일이삼사오육칠팔구".index(text[1])+1
     
+    return int(result)
+    
+
 def get_week_no(y, m, d):
   firstday = calendar.weekday(y,m,1) # 첫날의 월~일 인덱스
   if firstday == 6: # 일요일
@@ -53,15 +44,23 @@ def get_week_no(y, m, d):
   return math.floor((d-origin)/7 + 1)
 
 def get_day_from_weekday(y, m, week,day):
-    firstday = calendar.weekday(y,m,1) # 첫날의 월~일 인덱스
-    # print(y,"년",m,"월",week,"째 주",day,"요일")
+    firstday = calendar.weekday(int(y),int(m),int(1)) # 첫날의 월~일 인덱스 0 : 월 6 : 일
     if firstday == 6: # 일요일
         origin = 1
+        return [0,origin+ (week-1)*7 + day]
     elif firstday < 3: # 월,화,수
-        origin = 1-(3-firstday)
+        lastday_premonth = 31
+        if m==1:
+            lastday_premonth = calendar.monthrange(y-1,12)[1]
+        else:
+            lastday_premonth = calendar.monthrange(y,int(m)-1)[1]
+        lastday_premonth = lastday_premonth-firstday  # 전 달의 마지막 일요일 
+        # print(y,"년",m,"월",week,"째 주",day,"요일")
+        result = lastday_premonth + (week-1)*7+day
+        return [-1,result]
     else: # 목,금,토 -> 다음주 일요일이 첫째주 기준
         origin = 1 + 6-firstday
-    return origin+ (week-1)*7 + day
+        return [0,origin+ (week-1)*7 + day]
 
 
 result = {"text":None,}
@@ -111,7 +110,6 @@ while(1):
         break
 
     else:    
-
         # 기념일
         break_flag = False
         for i in range (len(special_day)):
@@ -271,16 +269,29 @@ while(1):
 
             if bool(re.search(r"\D{1}요일",text)):
                 tmp_wday = re.findall(r"\D{1}요일",text)[0][0:-2] 
-                tmp_idx = '일월화수목금토'.index(tmp_wday) # 입력받은 값 월~일 인덱스
-
-                tmp_day = get_day_from_weekday(year,month,week,tmp_idx)
-                if(tmp_day > this_last_day): # 달 넘어간다면
-                    tmp_day = tmp_day - this_last_day
-                    month = month + 1
-                    if month > 12 :
-                        month = month % 12
-                        year = year + 1
-                day = tmp_day
+                tmp_idx = ('일월화수목금토'.index(tmp_wday)) # 입력받은 값 월~일 인덱스
+                tmp_day_list = get_day_from_weekday(year,month,week,int(tmp_idx))
+                if tmp_day_list[0]==0: # 첫째주 문제 없는경우
+                    tmp_day = tmp_day_list[1]
+                    if(tmp_day > this_last_day): # 달 넘어간다면
+                        tmp_day = tmp_day - this_last_day
+                        month = month + 1
+                        if month > 12 :
+                            month = month % 12
+                            year = year + 1
+                    day = tmp_day
+                else : #첫째주엥서 문제생기는경우 (달을 이전달로 해주거나 처리해주어야함)
+                    tmp_day = tmp_day_list[1]
+                    lastday_premonth=31
+                    if int(month)==1:
+                        lastday_premonth = calendar.monthrange(year-1,12)[1]
+                    else:
+                        lastday_premonth = calendar.monthrange(year,int(month)-1)[1]
+                    if tmp_day<=lastday_premonth: # 그 전달 마지막주가 첫째주에 포함되는경우
+                        day = tmp_day
+                        month = int(month)-1
+                    else : 
+                        day= tmp_day - lastday_premonth
                 day_flag =True
 
 
@@ -289,7 +300,7 @@ while(1):
         # 일단은 이번주 기준
         if day_flag==False and week_flag==False:
             if bool(re.search(r"\D{1}요일",text)):
-                tmp_wday = re.search(r"\D{1}요일",text).string[0:-2] 
+                tmp_wday = re.findall(r"\D{1}요일",text)[0][0:-2] 
                 tmp_idx = '월화수목금토일'.index(tmp_wday) # 입력받은 값 월~일 인덱스
                 to_idx = calendar.weekday(thisyear,thismonth,today) # 오늘의 월~일 인덱스
 

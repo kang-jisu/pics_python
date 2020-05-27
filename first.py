@@ -71,8 +71,16 @@ def getFile(file=None):
     
         pic_data = request.files['file']
         result["text"] = OCR(pic_data)
-        startDate = datetime.now().timetuple()
-        endDate = datetime.now().timetuple()
+        startYear = 2020
+        startMonth = 5
+        startDay = 27
+        startHour = 23
+        startMin = 11
+        startDate = datetime(startYear,startMonth,startDay,startHour,startMin)
+
+        endDate = startDate + timedelta(hours=1)
+        endDate = endDate.timetuple()
+        startDate = startDate.timetuple()
 
         result["startYear"]=startDate.tm_year
         result["startMonth"]=startDate.tm_mon
@@ -87,9 +95,38 @@ def getFile(file=None):
         print(result)
     return result
 
-@app.route('/cr')
-def crolling():
+@app.route('/fileandcroll',methods=['POST'])
+def crolling(file=None):
+    result = {"text":None,}
+        if request.method == 'POST':
+            if 'file' not in request.files:
+                return 'File is missing', 404
+        
+            pic_data = request.files['file']
+            result["text"] = OCR(pic_data)
+            startYear = 2020
+            startMonth = 5
+            startDay = 27
+            startHour = 23
+            startMin = 11
+            startDate = datetime(startYear,startMonth,startDay,startHour,startMin)
 
+            endDate = startDate + timedelta(hours=1)
+            endDate = endDate.timetuple()
+            startDate = startDate.timetuple()
+
+            result["startYear"]=startDate.tm_year
+            result["startMonth"]=startDate.tm_mon
+            result["startDay"]=startDate.tm_mday
+            result["startHour"]=startDate.tm_hour
+            result["startMin"]=startDate.tm_min
+            result["endYear"]=endDate.tm_year
+            result["endMonth"]=endDate.tm_mon
+            result["endDay"]=endDate.tm_mday
+            result["endHour"]=endDate.tm_hour
+            result["endMin"]=endDate.tm_min
+            print(result)
+            
     options = webdriver.ChromeOptions()
     options.add_argument('headless')
 
@@ -100,7 +137,7 @@ def crolling():
 
 
     key_words = [ '우리 월욜에만나!!ㅋㅋ' ]
-    result = None
+    resultCroll = None
     for word in key_words:
         driver.get(target_url)
         search_window = driver.find_element_by_name("content")  # search window
@@ -122,12 +159,12 @@ def crolling():
 
         html = driver.page_source
         soup = BeautifulSoup(html, 'html.parser')
-        result = str(soup.select("#checker_preview"))
+        resultCroll = str(soup.select("#checker_preview"))
 
         #태그 제거
-        result = re.sub('<.+?>', '', result, 0).strip();
+        resultCroll = re.sub('<.+?>', '', resultCroll, 0).strip();
 
-        print(result)
+        print(resultCroll)
         # result = driver.find_element_by_class_name("wrong solved")
         # print(result)
 
