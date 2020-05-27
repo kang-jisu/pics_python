@@ -17,7 +17,7 @@ class SpeechBalloonDetector:
         import object_detection.select_bounding_boxes as sb_util
 
         # Name of the directory containing the object detection module we're using
-        self.MODEL_NAME = 'inference_graph'
+        self.MODEL_NAME = 'object_detection/inference_graph'
 
         # Grab path to current working directory
         self.CWD_PATH = os.getcwd()
@@ -27,7 +27,7 @@ class SpeechBalloonDetector:
         PATH_TO_CKPT = os.path.join(self.CWD_PATH, self.MODEL_NAME,'frozen_inference_graph.pb')
 
         # Path to label map file
-        PATH_TO_LABELS = os.path.join(self.CWD_PATH,'training','object-detection.pbtxt')
+        PATH_TO_LABELS = os.path.join(self.CWD_PATH,'object_detection/training','object-detection.pbtxt')
 
 
         # Number of classes the object detector can identify
