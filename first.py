@@ -20,46 +20,18 @@ import re
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+from object_detection.image_to_text import ImageToText
 
-okt = Okt()
- 
-okt.morphs     #형태소 분석
-okt.nouns      #명사 분석
+itt = ImageToText() # 말풍선 인식 모델 학습
 
 app = Flask (__name__)
  
 CORS(app, resources={r'*': {'origins': '*'}})
 
-def OCR(pic_data):
-    print(pic_data)
-    filename = secure_filename(pic_data.filename) # 업로드 된 파일의 이름이 안전한가를 확인해주는 함수이다. 해킹 공격에 대해 보안을 하고자 사용되기도 한다.
-    print(filename)
-    return filename
-
-
-@app.route('/')
-def hello_world():
-    return 'Hello, World!'
- 
 @app.route('/main')
 @app.route('/main/<int:num>') # 두개의 주소를 모두 아래있는 함수로 실행. 이중라우팅
 def inputTest(num=None):
     return render_template('main.html',num=num)
-
-@app.route('/calculate',methods=['POST'])
-def calculate(num=None):
-    if request.method == 'POST':
-        temp = request.form['num']
-    else:
-        temp = None
-    return redirect(url_for('inputTest',num=temp))
- 
-@app.route('/user/<userName>') # URL뒤에 <>을 이용해 가변 경로를 적는다
-def hello_user(userName):
-    print(okt.morphs(userName))
-    return 'Hello, %s'%(userName)
-
-
 
 # api 
 @app.route('/file',methods=['POST'])
@@ -102,8 +74,17 @@ def crolling(file=None):
         if 'file' not in request.files:
             return 'File is missing', 404
     
-        pic_data = request.files['file']
-        result["text"] = OCR(pic_data)
+        pic_data = request.files['file'] # 받은 파일
+        filename = secure_filename(pic_data.filename) #파일 이름
+        new_path = os.path.abspath(filename)  # 파일의 절대 경로
+
+        image_name = new_path    #이부분 cwd+파일명으로 구현되어 있는데 절대경로가 나으면 수정할 수 있습니다!
+
+        #문장 가져오기!
+        sentences = itt.image_to_text(image_name)
+        print(sentences)
+
+        result["text"] = sentences
         startYear = 2020
         startMonth = 5
         startDay = 27
