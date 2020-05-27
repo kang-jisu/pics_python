@@ -54,6 +54,11 @@ class SpeechBalloonDetector:
             self.sess = tf.Session(graph=self.detection_graph)
 
     def detect_boundings(self, path):
+        sys.path.append("..")
+        from utils import label_map_util    
+        from utils import visualization_utils as vis_util
+        import select_bounding_boxes as sb_util
+        
         #IMAGE_NAME = path
         # Path to image
         #PATH_TO_IMAGE = os.path.join(self.CWD_PATH,IMAGE_NAME)
