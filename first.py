@@ -123,6 +123,7 @@ def crolling(file=None):
 
         key_words = sentences
         resultCroll = None
+        resultText=""
         for word in key_words:
             driver.get(target_url)
             search_window = driver.find_element_by_name("content")  # search window
@@ -150,6 +151,7 @@ def crolling(file=None):
             resultCroll = re.sub('<.+?>', '', resultCroll, 0).strip();
 
             print(resultCroll)
+            resultText+=resultCroll+" "
             # result = driver.find_element_by_class_name("wrong solved")
             # print(result)
 
@@ -161,10 +163,11 @@ def crolling(file=None):
             os.remove(new_path)
             print(new_path,'파일 삭제')
         status = "DATETIME"
-        text = "다음주 일요일 4시 반"
+        # text = "다음주 일요일 4시 반"
+        text = resultText
         ext = extractDateTIme(status,text)
-        print(extractResult)
-        
+        print(ext)
+
         startDate = datetime(ext[0],ext[1],ext[2],ext[3],ext[4])
 
         endDate = startDate + timedelta(hours=1)
