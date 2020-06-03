@@ -122,40 +122,42 @@ def crolling(file=None):
 
 
         key_words = sentences
-        sentencesGroup = ""
-        for word in key_words:
-            sentencesGroup+= word+"\n"
-
         resultCroll = None
         resultText=""
+        sentencesGroup = ""
+        if len(sentences)==0:
+            resultText="12시"
+        else :
+            for word in key_words:
+                sentencesGroup+= word+"\n"
 
-        # 크롤링
-        driver.get(target_url)
-        search_window = driver.find_element_by_name("content")  # search window
 
-        search_window.send_keys(sentencesGroup)
-        #맞춤법 검사버튼 클릭
-        btn = driver.find_element_by_id("spell_check")
-        btn.click();
+            # 크롤링
+            driver.get(target_url)
+            search_window = driver.find_element_by_name("content")  # search window
 
-        time.sleep(0.5)
+            search_window.send_keys(sentencesGroup)
+            #맞춤법 검사버튼 클릭
+            btn = driver.find_element_by_id("spell_check")
+            btn.click();
 
-        #맞춤법 일괄 변경 클릭
-        editBtn = driver.find_element_by_id("spell_done_all")
-        #print(editBtn)
-        #editBtn.click();
-        editBtn.send_keys('\n')  
+            time.sleep(0.5)
 
-        time.sleep(0.3)
+            #맞춤법 일괄 변경 클릭
+            editBtn = driver.find_element_by_id("spell_done_all")
+            #print(editBtn)
+            #editBtn.click();
+            editBtn.send_keys('\n')  
 
-        html = driver.page_source
-        soup = BeautifulSoup(html, 'html.parser')
-        resultCroll = str(soup.select("#checker_preview"))
+            time.sleep(0.3)
 
-        #태그 제거
-        resultText = re.sub('<.+?>', '', resultCroll, 0).strip();
-        print(resultText)
+            html = driver.page_source
+            soup = BeautifulSoup(html, 'html.parser')
+            resultCroll = str(soup.select("#checker_preview"))
 
+            #태그 제거
+            resultText = re.sub('<.+?>', '', resultCroll, 0).strip();
+            print(resultText)
 
         if os.path.isfile(new_path):
             os.remove(new_path)
