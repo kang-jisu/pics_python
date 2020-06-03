@@ -60,6 +60,7 @@ driver = webdriver.Chrome(driver_path,chrome_options=options)
 
 target_url = "http://www.saramin.co.kr/zf_user/tools/character-counter"                                              # target url
 driver.get(target_url)
+search_window = driver.find_element_by_name("content")  # search window
 
 print("크롬실행!")
 
@@ -144,8 +145,7 @@ def crolling(file=None):
             sentencesGroup = "\n".join(sentences)
             # # 크롤링
             print("크롤링")
-            search_window = driver.find_element_by_name("content")  # search window
-
+ 
             search_window.send_keys(sentencesGroup)
             #맞춤법 검사버튼 클릭
             btn = driver.find_element_by_id("spell_check")
@@ -171,7 +171,6 @@ def crolling(file=None):
 
             successBtn = driver.find_element_by_id("spell_completion")
             successBtn.send_keys('\n')
-            driver.quit()
 
         if os.path.isfile(new_path):
             os.remove(new_path)
@@ -206,3 +205,5 @@ def crolling(file=None):
 if __name__ == "__main__":
     app.run(host='0.0.0.0')
 
+
+driver.quit()
