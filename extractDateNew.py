@@ -231,7 +231,7 @@ def extractDate(text):
     
         
     # 몇째 주 
-    searchWeek = re.findall(r'마지막주|마지막 주|다음주|다음 주|다다음 주|다다음주|[가-힣]{1,2}째주|[가-힣]{1,2}째 주|[0-9가-힣]{1,2}번째|[가-힣]{1,2} 번째',text)
+    searchWeek = re.findall(r'마지막주|마지막 주|다음주|다음 주|다 다음주|다 다음 주|다다음 주|다다음주|[가-힣]{1,2}째주|[가-힣]{1,2}째 주|[0-9가-힣]{1,2}번째|[가-힣]{1,2} 번째',text)
 
     if len(searchWeek)>0:
         weektext = searchWeek[len(searchWeek)-1]
@@ -244,7 +244,7 @@ def extractDate(text):
             year = thisyear
             month = thismonth
             
-            if bool(re.search(r"다다음주",weektext)) or bool(re.search(r"다다음 주",weektext)):
+            if bool(re.search(r"다다음주",weektext)) or bool(re.search(r"다다음 주",weektext)) or bool(re.search(r"다 다음주",weektext)) or bool(re.search(r"다 다음 주",weektext)):
                 week = today_week+2    
             else :
                 week = today_week+1
