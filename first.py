@@ -142,6 +142,7 @@ def crolling(file=None):
         if len(sentences)==0:
             resultText="12시"
         else :
+            sentencesGroup = ""
             sentencesGroup = "\n".join(sentences)
             # # 크롤링
             print("크롤링")
