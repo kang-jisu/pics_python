@@ -158,8 +158,6 @@ def crolling(file=None):
             #print(editBtn)
             #editBtn.click();
             editBtn.send_keys('\n')  
-            successBtn = driver.find_element_by_id("spell_completion")
-            successBtn.send_keys('\n')
 
             time.sleep(0.3)
 
@@ -170,6 +168,9 @@ def crolling(file=None):
             #태그 제거
             resultText = re.sub('<.+?>', '', resultCroll, 0).strip();
             print(resultText)
+
+            successBtn = driver.find_element_by_id("spell_completion")
+            successBtn.send_keys('\n')
             driver.quit()
 
         if os.path.isfile(new_path):
