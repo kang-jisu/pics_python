@@ -49,7 +49,7 @@ def extractDateTIme(status,text):
         result = [tmp.tm_year,tmp.tm_mon,tmp.tm_mday, resTime[1],resTime[2]]
         return result
 
-
+print("크롬실행중")
 options = webdriver.ChromeOptions()
 options.add_argument('headless')
 
@@ -62,6 +62,7 @@ target_url = "http://www.saramin.co.kr/zf_user/tools/character-counter"         
 driver.get(target_url)
 search_window = driver.find_element_by_name("content")  # search window
 
+print("크롬실행!")
 app = Flask (__name__)
  
 CORS(app, resources={r'*': {'origins': '*'}})
@@ -121,6 +122,7 @@ def crolling(file=None):
         #문장 가져오기!
         sentences = itt.image_to_text(new_path)
         print(sentences)
+        key_words = sentences
 
         result["text"] = filename
 
