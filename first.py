@@ -49,6 +49,19 @@ def extractDateTIme(status,text):
         result = [tmp.tm_year,tmp.tm_mon,tmp.tm_mday, resTime[1],resTime[2]]
         return result
 
+
+options = webdriver.ChromeOptions()
+options.add_argument('headless')
+
+driver_path = "./chromedriver"
+driver = webdriver.Chrome(driver_path,chrome_options=options)
+
+target_url = "http://www.saramin.co.kr/zf_user/tools/character-counter"                                              # target url
+
+            # 크롤링
+driver.get(target_url)
+search_window = driver.find_element_by_name("content")  # search window
+
 app = Flask (__name__)
  
 CORS(app, resources={r'*': {'origins': '*'}})
@@ -112,16 +125,20 @@ def crolling(file=None):
         result["text"] = filename
 
 
-        options = webdriver.ChromeOptions()
-        options.add_argument('headless')
+        # options = webdriver.ChromeOptions()
+        # options.add_argument('headless')
 
-        driver_path = "./chromedriver"
-        driver = webdriver.Chrome(driver_path,chrome_options=options)
+        # driver_path = "./chromedriver"
+        # driver = webdriver.Chrome(driver_path,chrome_options=options)
 
-        target_url = "http://www.saramin.co.kr/zf_user/tools/character-counter"                                              # target url
+        # target_url = "http://www.saramin.co.kr/zf_user/tools/character-counter"                                              # target url
 
 
-        key_words = sentences
+
+        #     # 크롤링
+        # driver.get(target_url)
+        # search_window = driver.find_element_by_name("content")  # search window
+        
         resultCroll = None
         resultText=""
         sentencesGroup = ""
@@ -133,9 +150,9 @@ def crolling(file=None):
                 else : sentencesGroup+= word+"\n"
 
 
-            # 크롤링
-            driver.get(target_url)
-            search_window = driver.find_element_by_name("content")  # search window
+            # # 크롤링
+            # driver.get(target_url)
+            # search_window = driver.find_element_by_name("content")  # search window
 
             search_window.send_keys(sentencesGroup)
             #맞춤법 검사버튼 클릭
