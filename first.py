@@ -128,7 +128,7 @@ def crolling(file=None):
         if len(sentences)==0:
             resultText="12시"
         else :
-            for i,word in key_words:
+            for i,word in enumerate(key_words):
                 if i==len(key_words)-1: sentencesGroup+= word
                 else : sentencesGroup+= word+"\n"
 
