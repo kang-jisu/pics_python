@@ -37,11 +37,12 @@ def extractDateTIme(status,text):
 
 # MAIN 함수
 
-# status = "DATETIME"
+status = "DATETIME"
 # status = "TIME"
-status = "DATE"
-text = "넷째주 일요일"
+# status = "DATE"
+text = "내일 세시"
 # text = "다음주 금요일 "
-
+# text= "2시"
 result = extractDateTIme(status,text)
+print(text)
 print(result)

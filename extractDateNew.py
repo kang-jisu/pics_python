@@ -79,9 +79,7 @@ def get_day_from_weekday(y, m, week,day):
         result = lastday_premonth + (week-1)*7+day +1
         return [-1,result]
     else: # 금,토,일 -> 다음주 월?요일이 첫째주 기준
-        print("zip")
         origin = 1 + 6-firstday+1
-        print(origin)
         return [0,origin+ (week-1)*7 + day]
 
 

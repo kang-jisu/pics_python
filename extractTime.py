@@ -97,7 +97,6 @@ def todayTomorrow(text):
             date = 0
     else : # 오늘
         date = 0
-
     return [date,hour,minute]
 
 
