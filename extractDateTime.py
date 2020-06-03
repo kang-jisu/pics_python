@@ -1,34 +1,47 @@
+from extractTime import todayTomorrow
+from extractDateNew import extractDate
+import re
+from pytz import timezone
+from datetime import timedelta, datetime
+
+
+# now = datetime.now(timezone('Asia/Seoul')).timetuple()
+# nowYear = now.tm_year
+# nowMonth = now.tm_mon
+# nowDay = now.tm_mday
+# nowHour = now.tm_hour
+# nowMin = now.tm_min
 
 def extractDateTIme(status,text):
     # status : "DATETIME","DATE","TIME"으로 구분
 
     if status=="DATETIME":
         #extractDate+time 따로 불러와서 실행하면됨
-        print("datetime")
+        resDate = extractDate(text)
+        resTime = todayTomorrow(text)
+        return [resDate[0],resDate[1],resDate[2],resTime[1],resTime[2]]
     elif status=="DATE":
-        print("date")
+        resDate = extractDate(text)
+        return [resDate[0],resDate[1],resDate[2],0,0]
     elif status=="TIME":
         #extracttime에서 오늘인지 내일인지 구분해줌
-        print("time")
-
-    return "2020 05 27"
-
-# 날짜 예시
-# 0월 00일 ( 가장 무난한 경우)
-# 00일, 몇째주 무슨요일 ( 달 표시 없이 -> 이번달로), 다음주 무슨요일, 다다음주 무슨요일
-# 다음달,0월 +  첫날, 마지막날, 00일, 몇째주 무슨요일
-# 기념일
-# 내일, 모레
-
-# 몇시 몇분
+        resTime = todayTomorrow(text)
+        tmp = None
+        if resTime[0] == 0: # 오늘
+            tmp = datetime.now(timezone('Asia/Seoul'))
+        else : # 내일
+            tmp = datetime.now(timezone('Asia/Seoul')) + timedelta(days=1)
+        tmp = tmp.timetuple()
+        result = [tmp.tm_year,tmp.tm_mon,tmp.tm_mday, resTime[1],resTime[2]]
+        return result
 
 # MAIN 함수
 
-status = "DATETIME"
+# status = "DATETIME"
 # status = "TIME"
-# status = "DATE"
-text = "2020년 5월 27일"
+status = "DATE"
+text = "넷째주 일요일"
+# text = "다음주 금요일 "
 
 result = extractDateTIme(status,text)
 print(result)
-

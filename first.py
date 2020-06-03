@@ -21,8 +21,33 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from object_detection.image_to_text import ImageToText
-
+from extractTime import todayTomorrow
+from extractDateNew import extractDate
+from pytz import timezone
 itt = ImageToText() # 말풍선 인식 모델 학습
+
+def extractDateTIme(status,text):
+    # status : "DATETIME","DATE","TIME"으로 구분
+
+    if status=="DATETIME":
+        #extractDate+time 따로 불러와서 실행하면됨
+        resDate = extractDate(text)
+        resTime = todayTomorrow(text)
+        return [resDate[0],resDate[1],resDate[2],resTime[1],resTime[2]]
+    elif status=="DATE":
+        resDate = extractDate(text)
+        return [resDate[0],resDate[1],resDate[2],0,0]
+    elif status=="TIME":
+        #extracttime에서 오늘인지 내일인지 구분해줌
+        resTime = todayTomorrow(text)
+        tmp = None
+        if resTime[0] == 0: # 오늘
+            tmp = datetime.now(timezone('Asia/Seoul'))
+        else : # 내일
+            tmp = datetime.now(timezone('Asia/Seoul')) + timedelta(days=1)
+        tmp = tmp.timetuple()
+        result = [tmp.tm_year,tmp.tm_mon,tmp.tm_mday, resTime[1],resTime[2]]
+        return result
 
 app = Flask (__name__)
  
@@ -85,28 +110,7 @@ def crolling(file=None):
         print(sentences)
 
         result["text"] = filename
-        startYear = 2020
-        startMonth = 5
-        startDay = 27
-        startHour = 23
-        startMin = 11
-        startDate = datetime(startYear,startMonth,startDay,startHour,startMin)
 
-        endDate = startDate + timedelta(hours=1)
-        endDate = endDate.timetuple()
-        startDate = startDate.timetuple()
-
-        result["startYear"]=startDate.tm_year
-        result["startMonth"]=startDate.tm_mon
-        result["startDay"]=startDate.tm_mday
-        result["startHour"]=startDate.tm_hour
-        result["startMin"]=startDate.tm_min
-        result["endYear"]=endDate.tm_year
-        result["endMonth"]=endDate.tm_mon
-        result["endDay"]=endDate.tm_mday
-        result["endHour"]=endDate.tm_hour
-        result["endMin"]=endDate.tm_min
-        print(result)
 
         options = webdriver.ChromeOptions()
         options.add_argument('headless')
@@ -156,6 +160,28 @@ def crolling(file=None):
         if os.path.isfile(new_path):
             os.remove(new_path)
             print(new_path,'파일 삭제')
+        status = "DATETIME"
+        text = "다음주 일요일 4시 반"
+        ext = extractDateTIme(status,text)
+        print(extractResult)
+        
+        startDate = datetime(ext[0],ext[1],ext[2],ext[3],ext[4])
+
+        endDate = startDate + timedelta(hours=1)
+        endDate = endDate.timetuple()
+        startDate = startDate.timetuple()
+
+        result["startYear"]=startDate.tm_year
+        result["startMonth"]=startDate.tm_mon
+        result["startDay"]=startDate.tm_mday
+        result["startHour"]=startDate.tm_hour
+        result["startMin"]=startDate.tm_min
+        result["endYear"]=endDate.tm_year
+        result["endMonth"]=endDate.tm_mon
+        result["endDay"]=endDate.tm_mday
+        result["endHour"]=endDate.tm_hour
+        result["endMin"]=endDate.tm_min
+        print(result)
 
     return result
 
