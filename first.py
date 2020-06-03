@@ -49,20 +49,20 @@ def extractDateTIme(status,text):
         result = [tmp.tm_year,tmp.tm_mon,tmp.tm_mday, resTime[1],resTime[2]]
         return result
 
-# print("크롬실행중")
-# options = webdriver.ChromeOptions()
-# options.add_argument('headless')
+print("크롬실행중")
 
-# driver_path = "./chromedriver"
-# driver = webdriver.Chrome(driver_path,chrome_options=options)
 
-# target_url = "http://www.saramin.co.kr/zf_user/tools/character-counter"                                              # target url
+options = webdriver.ChromeOptions()
+options.add_argument('headless')
 
-#             # 크롤링
-# driver.get(target_url)
-# search_window = driver.find_element_by_name("content")  # search window
+driver_path = "./chromedriver"
+driver = webdriver.Chrome(driver_path,chrome_options=options)
 
-# print("크롬실행!")
+target_url = "http://www.saramin.co.kr/zf_user/tools/character-counter"                                              # target url
+driver.get(target_url)
+
+print("크롬실행!")
+
 app = Flask (__name__)
  
 CORS(app, resources={r'*': {'origins': '*'}})
@@ -122,39 +122,29 @@ def crolling(file=None):
         #문장 가져오기!
         sentences = itt.image_to_text(new_path)
         print(sentences)
-        key_words = sentences
 
         result["text"] = filename
 
 
-        options = webdriver.ChromeOptions()
-        options.add_argument('headless')
+        # options = webdriver.ChromeOptions()
+        # options.add_argument('headless')
 
-        driver_path = "./chromedriver"
-        driver = webdriver.Chrome(driver_path,chrome_options=options)
+        # driver_path = "./chromedriver"
+        # driver = webdriver.Chrome(driver_path,chrome_options=options)
 
-        target_url = "http://www.saramin.co.kr/zf_user/tools/character-counter"                                              # target url
-
-
-
-            # 크롤링
-        driver.get(target_url)
-        search_window = driver.find_element_by_name("content")  # search window
-        
+        # target_url = "http://www.saramin.co.kr/zf_user/tools/character-counter"                                              # target url
+        # driver.get(target_url)
+           
         resultCroll = None
         resultText=""
         sentencesGroup = ""
         if len(sentences)==0:
             resultText="12시"
         else :
-            for i,word in enumerate(key_words):
-                if i==len(key_words)-1: sentencesGroup+= word
-                else : sentencesGroup+= word+"\n"
-
-
+            sentencesGroup = "\n".join(sentences)
             # # 크롤링
-            # driver.get(target_url)
-            # search_window = driver.find_element_by_name("content")  # search window
+            print("크롤링")
+             search_window = driver.find_element_by_name("content")  # search window
 
             search_window.send_keys(sentencesGroup)
             #맞춤법 검사버튼 클릭
@@ -211,3 +201,6 @@ def crolling(file=None):
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0')
+
+
+driver.quit()
