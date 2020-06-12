@@ -1,2 +1,6 @@
 object_detection/utils/__pycache__
+object_detection/__pycache__
+object_detection/core/__pycache__
+object_detection/ocr/__pycache__
+object_detection/protos/__pycache__
 __pycache__
