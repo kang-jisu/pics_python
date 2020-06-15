@@ -23,16 +23,24 @@ class DateTimeSentimentAnalyzer:
         ret = []
         string = ""
         words = text.split()
-        #for i in words:
         for idx in range(len(words)):
             i = words[idx]
             pos = self.kkma.pos(i)
             string = string + i + ' '
 
+            #다음 단어가 특수기호면 넘어감
+            if idx != len(words) - 1:
+                next_word = self.kkma.pos(words[idx + 1])
+                if next_word[-1][1][0] == "S":
+                    continue
+
             if pos[len(pos)-1][1][:2] == "ECE":
                 ret.append(string)
                 string = ""
             elif pos[len(pos)-1][1][:2] == "IC":
+                ret.append(string)
+                string = ""
+            elif pos[len(pos)-1][1][0] == "S":
                 ret.append(string)
                 string = ""
             
@@ -75,7 +83,6 @@ class DateTimeSentimentAnalyzer:
         is_prev_q = False
         sentences = self.split_sentence_with_s(sentences)
         sentences = preprocess(sentences)
-
         for i in sentences:
             is_q = self.ia.is_question(i)
             has_dt = len(datetime_recognizer(i))
@@ -112,7 +119,7 @@ class DateTimeSentimentAnalyzer:
                     else:
                         result.extend(dt_before)
                         dt_before = []
-                elif not result:
+                elif not result and dt_before:
                     result.extend(dt_before)
                     dt_before = []
                 prev_dt = []
@@ -151,9 +158,18 @@ class DateTimeSentimentAnalyzer:
                     for dt in sent_ret:
                         if dt[1] != 0:
                             sent_add.append(dt)
-                
+                else:
+                    sent_add = sent_ret
+
                 result.extend(sent_add)
 
             is_prev_q = is_q
+
+
+        if dt_before:
+            if not result:
+                result.extend(dt_before)
+            elif result[-1][0] != dt_before[-1][0]:
+                result.extend(dt_before)
 
         return result
