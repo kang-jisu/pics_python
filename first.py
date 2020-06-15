@@ -172,7 +172,7 @@ def crolling(file=None):
 
             #태그 제거
             resultText = re.sub('<.+?>', '', resultCroll, 0).strip();
-            print(resultText)
+            # print(resultText)
 
             successBtn = driver.find_element_by_id("spell_completion")
             successBtn.send_keys('\n')
@@ -183,6 +183,11 @@ def crolling(file=None):
 
         status = "DATETIME"
         # text = "다음주 일요일 4시 반"
+
+        print(resultText)
+        resultText = resultText.replace("[","")
+        resultText=resultText.replace("]","")
+        
         text = resultText.split("\n")
         print(text)
         result_dt = dt_select(dtsa.entity_sentiment_analyze(text))

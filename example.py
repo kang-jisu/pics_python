@@ -5,10 +5,10 @@
 3. datetime_recognizer의 ACCESSKEY
 """
 
-from entity_sentiment_v4 import DateTimeSentimentAnalyzer
-from date_time_tagger import dt_select
+from NLP.entity_sentiment_v4 import DateTimeSentimentAnalyzer
+from NLP.date_time_tagger import dt_select
 
 dtsa = DateTimeSentimentAnalyzer(False)
-texts = ['월요일에 만나요!', '좋습니다']
+texts = ['7월 셋째 주 금요일', '열시 반 !!'] #  ['월요일에 만나요!', '좋습니다']
 result = dt_select(dtsa.entity_sentiment_analyze(texts))
 print(result)
