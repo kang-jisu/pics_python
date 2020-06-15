@@ -2,7 +2,7 @@ def preprocess(text):
     for idx in range(len(text)):
         line = text[idx]
         
-        line = line.replace(' 다 다음 주', ' 다다음주')
+        line = line.replace('다 다음 주', '다다음주')
         line = line.replace('다음 주', '다음주')
         line = line.replace('이번 주', '이번주')
         line = line.replace('째 주', '째주')
