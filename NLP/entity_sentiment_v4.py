@@ -5,11 +5,11 @@ from konlpy.tag import Kkma
 import urllib3
 import json
 
-from sentiment_analyzer_v3 import SentimentAnalyzer
-from datetime_recognizer import datetime_recognizer
+from NLP.sentiment_analyzer_v3 import SentimentAnalyzer
+from NLP.datetime_recognizer import datetime_recognizer
 
-from intent_analyzer import IntentAnalyzer
-from preprocessor import preprocess
+from NLP.intent_analyzer import IntentAnalyzer
+from NLP.preprocessor import preprocess
 
 
 class DateTimeSentimentAnalyzer:

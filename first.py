@@ -24,7 +24,12 @@ from object_detection.image_to_text import ImageToText
 from extractTime import todayTomorrow
 from extractDateNew import extractDate
 from pytz import timezone
+
+from NLP.entity_sentiment_v4 import DateTimeSentimentAnalyzer
+from NLP.date_time_tagger import dt_select
+
 itt = ImageToText() # 말풍선 인식 모델 학습
+dtsa = DateTimeSentimentAnalyzer(False)
 
 def extractDateTIme(status,text):
     # status : "DATETIME","DATE","TIME"으로 구분
@@ -175,10 +180,14 @@ def crolling(file=None):
         if os.path.isfile(new_path):
             os.remove(new_path)
             print(new_path,'파일 삭제')
+
         status = "DATETIME"
         # text = "다음주 일요일 4시 반"
-        text = resultText
-        ext = extractDateTIme(status,text)
+        text = resultText.split("\n")
+        print(text)
+        result_dt = dt_select(dtsa.entity_sentiment_analyze(text))
+        print(result_dt)
+        ext = extractDateTIme(status,resultText)
         print(ext)
 
         startDate = datetime(ext[0],ext[1],ext[2],ext[3],ext[4])
