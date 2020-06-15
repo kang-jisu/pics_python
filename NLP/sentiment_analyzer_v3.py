@@ -7,10 +7,10 @@ class SentimentAnalyzer:
     def __init__(self, usejk):
         self.kkma = Kkma()
 
-        pos_dict = pd.read_csv("PATH_pos_dict_v3_kkma.csv")
-        neg_dict = pd.read_csv("PATH_neg_dict_v3_kkma.csv")
-        pos_ans_csv = pd.read_csv("PATH_pos_answer_dict_kkma.csv")
-        neg_ans_csv = pd.read_csv("PATH_neg_answer_dict_kkma.csv")
+        pos_dict = pd.read_csv("/home/ec2-user/model/pos_dict_v3_kkma.csv")
+        neg_dict = pd.read_csv("/home/ec2-user/model/neg_dict_v3_kkma.csv")
+        pos_ans_csv = pd.read_csv("/home/ec2-user/model/pos_answer_dict_kkma.csv")
+        neg_ans_csv = pd.read_csv("/home/ec2-user/model/neg_answer_dict_kkma.csv")
 
         self.pos_dict_1 = pos_dict[pos_dict['n-gram'] == 1]['word'].values.tolist()
         self.pos_dict_2 = pos_dict[pos_dict['n-gram'] == 2]['word'].values.tolist()

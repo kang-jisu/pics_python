@@ -12,14 +12,14 @@ import re
 
 class IntentAnalyzer:
     def __init__(self):
-        self.model_ft = FastText.load_fasttext_format('PATH_model_drama.bin')
+        self.model_ft = FastText.load_fasttext_format('/home/ec2-user/model/model_drama.bin')
 
         self.config = tf.ConfigProto()
         self.config.gpu_options.per_process_gpu_memory_fraction = 0.01
         set_session(tf.Session(config=self.config))
 
 
-        self.model_fci  = load_model('PATH_rec_self_char_dense_drop-24-0.8882.hdf5')
+        self.model_fci  = load_model('/home/ec2-user/model/rec_self_char_dense_drop-24-0.8882.hdf5')
 
         self.wdim=100
 

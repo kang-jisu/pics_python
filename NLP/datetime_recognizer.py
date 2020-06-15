@@ -2,10 +2,11 @@
 #-*- coding:utf-8 -*-
 import urllib3
 import json
+import os
  
 def datetime_recognizer(text):
     openApiURL = "http://aiopen.etri.re.kr:8000/WiseNLU"
-    accessKey = "ACCESSKEY를 추가하세요"
+    accessKey = os.getenv('accessKey')
     analysisCode = "ner"
     
     requestJson = {
