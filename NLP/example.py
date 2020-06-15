@@ -10,5 +10,5 @@ from date_time_tagger import dt_select
 
 dtsa = DateTimeSentimentAnalyzer(False)
 texts = ['월요일에 만나요!', '좋습니다']
-result = dt_select(dtsa.entity_sentiment_analyzer(texts))
+result = dt_select(dtsa.entity_sentiment_analyze(texts))
 print(result)
