@@ -17,15 +17,15 @@ def extractDateTIme(status,text):
 
     if status=="DATETIME":
         #extractDate+time 따로 불러와서 실행하면됨
-        resDate = extractDate(text)
-        resTime = todayTomorrow(text)
+        resDate = extractDate(text[0])
+        resTime = todayTomorrow(text[1])
         return [resDate[0],resDate[1],resDate[2],resTime[1],resTime[2]]
     elif status=="DATE":
-        resDate = extractDate(text)
+        resDate = extractDate(text[0])
         return [resDate[0],resDate[1],resDate[2],0,0]
     elif status=="TIME":
         #extracttime에서 오늘인지 내일인지 구분해줌
-        resTime = todayTomorrow(text)
+        resTime = todayTomorrow(text[1])
         tmp = None
         if resTime[0] == 0: # 오늘
             tmp = datetime.now(timezone('Asia/Seoul'))

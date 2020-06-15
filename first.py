@@ -192,7 +192,14 @@ def crolling(file=None):
         print(text)
         result_dt = dt_select(dtsa.entity_sentiment_analyze(text))
         print(result_dt)
-        ext = extractDateTIme(status,resultText)
+        
+        if result_dt[0]!="" and result_dt[1]!="":
+            status="DATETIME"
+        elif result_dt[0]!="" and result_dt[1]=="":
+            status="DATE"
+        elif result_dt[0]=="" and result_dt[1]!="":
+            status="TIME"
+        ext = extractDateTIme(status,result_dt)
         print(ext)
 
         startDate = datetime(ext[0],ext[1],ext[2],ext[3],ext[4])
