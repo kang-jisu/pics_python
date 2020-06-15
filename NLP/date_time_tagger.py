@@ -53,9 +53,6 @@ def dt_select(dt_list):
     for i in dt_list:
         dt_dict[i[0][0]] = (i[0][1], i[1], order)
         order += 1
-
-    print('dt_dict')
-    print(dt_dict)
     
     dt_list_sorted = []
     for key, val in dt_dict.items():
