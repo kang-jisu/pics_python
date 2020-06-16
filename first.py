@@ -106,15 +106,17 @@ def featurize_charrnn_utt(corpus,maxcharlen):
 def pred_only_text(s):
     global graph
     global sess
+    global model_fci
     set_session(sess)
-    with graph.as_default():
-        rec = featurize_charrnn_utt(s, 80)
-        att=np.zeros((1,64))
-        z = model_fci.predict([rec,att])[0]
-        z = np.argmax(z)
-        y = int(z)
-        return z
-    
+    with sess.as_default():
+        with graph.as_default():
+            rec = featurize_charrnn_utt(s, 80)
+            att=np.zeros((1,64))
+            z = model_fci.predict([rec,att])[0]
+            z = np.argmax(z)
+            y = int(z)
+            return z
+
     print("error in 3i4k")
     return 0
 
@@ -255,7 +257,7 @@ def crolling(file=None):
         is_question_list = []
         for tx in text:
             is_question_list.append(is_question(tx))
-        #result_dt = dt_select(dtsa.entity_sentiment_analyze(text))
+        result_dt = dt_select(dtsa.entity_sentiment_analyze(text, is_question_list))
         print(result_dt)
         
         if result_dt[0]!="" and result_dt[1]!="":
