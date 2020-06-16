@@ -29,16 +29,16 @@ from NLP.entity_sentiment_v4 import DateTimeSentimentAnalyzer
 from NLP.date_time_tagger import dt_select
 
 itt = ImageToText() # 말풍선 인식 모델 학습
-dtsa = DateTimeSentimentAnalyzer(False)
+# dtsa = DateTimeSentimentAnalyzer(False)
 
 def extractDateTIme(status,text):
     # status : "DATETIME","DATE","TIME"으로 구분
-
+    print(text)
     if status=="DATETIME":
         #extractDate+time 따로 불러와서 실행하면됨
         resDate = extractDate(text)
-        resTime = todayTomorrow(text)
-        return [resDate[0],resDate[1],resDate[2],resTime[1],resTime[2]]
+        # resTime = todayTomorrow(text)
+        return [resDate[0],resDate[1],resDate[2],13,0]
     elif status=="DATE":
         resDate = extractDate(text)
         return [resDate[0],resDate[1],resDate[2],0,0]
@@ -188,21 +188,21 @@ def crolling(file=None):
         resultText = resultText.replace("[","")
         resultText=resultText.replace("]","")
         
-        text = resultText.split("\n")
-        print(text)
-        result_dt = dt_select(dtsa.entity_sentiment_analyze(text))
-        print(result_dt)
+        #text = resultText.split("\n")
+        #print(text)
+        #result_dt = dt_select(dtsa.entity_sentiment_analyze(text))
+        #print(result_dt)
         
-        if result_dt[0]!="" and result_dt[1]!="":
-            status="DATETIME"
-        elif result_dt[0]!="" and result_dt[1]=="":
-            status="DATE"
-        elif result_dt[0]=="" and result_dt[1]!="":
-            status="TIME"
-        ext = extractDateTIme(status,result_dt)
+        #if result_dt[0]!="" and result_dt[1]!="":
+        #    status="DATETIME"
+        #elif result_dt[0]!="" and result_dt[1]=="":
+        #    status="DATE"
+        #elif result_dt[0]=="" and result_dt[1]!="":
+        #    status="TIME"
+        ext = extractDateTIme(status,resultText)
         print(ext)
 
-        startDate = datetime(ext[0],ext[1],ext[2],ext[3],ext[4])
+        startDate = datetime(ext[0],ext[1],ext[2],ext[3],0)
 
         endDate = startDate + timedelta(hours=1)
         endDate = endDate.timetuple()
