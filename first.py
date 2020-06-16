@@ -85,7 +85,8 @@ app = Flask (__name__)
 #의도(질문인지 아닌지) 확인하는 코드
 model_ft = FastText.load_fasttext_format('/home/ec2-user/model/model_drama.bin')
 config = tf.ConfigProto()
-set_session(tf.Session(config=config))
+#set_session(tf.Session(config=config))
+sess = tf.Session(config=config)
 model_fci  = load_model('/home/ec2-user/model/rec_self_char_dense_drop-24-0.8882.hdf5')
 wdim=100
 reg_ex = re.compile(r'.*[?]([-=+,#/;:\\^$.@*\s\'\"~%&!\(\)\<\>])*$')
@@ -104,7 +105,8 @@ def featurize_charrnn_utt(corpus,maxcharlen):
 
 def pred_only_text(s):
     global graph
-    
+    global sess
+    set_session(sess)
     with graph.as_default():
         rec = featurize_charrnn_utt(s, 80)
         att=np.zeros((1,64))
