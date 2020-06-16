@@ -33,15 +33,11 @@ from NLP.date_time_tagger import dt_select
 from NLP.preprocessor import preprocess
 
 import numpy as np
-import sys
-import os
-
 from gensim.models.wrappers import FastText
 import tensorflow as tf
 from keras.backend.tensorflow_backend import set_session
 from keras.models import load_model
 
-import re
 
 itt = ImageToText() # 말풍선 인식 모델
 dtsa = DateTimeSentimentAnalyzer(False)
