@@ -15,5 +15,5 @@
 - contributor
   - 백엔드([강지수](https://github.com/kang-jisu))
   - 자연어처리([손인아](https://github.com/Ina-Son))
-  - 안드로이드([허예은](https://github.com/yenny-heo))
+  - 안드로이드([허예은](https://github.com/yenny-heo)) [PICS](https://github.com/yenny-heo/PICS)
 
