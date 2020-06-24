@@ -82,47 +82,51 @@ print("크롬실행!")
 
 app = Flask (__name__)
 
-#의도(질문인지 아닌지) 확인하는 코드
-model_ft = FastText.load_fasttext_format('/home/ec2-user/model/model_drama.bin')
 config = tf.ConfigProto()
-#set_session(tf.Session(config=config))
+print("session")
 sess = tf.Session(config=config)
+set_session(sess)
+
+print("graph")
+graph = tf.get_default_graph()
+#의도(질문인지 아닌지) 확인하는 코드
+print("model_ft")
+global modefl_ft
+model_ft = FastText.load_fasttext_format('/home/ec2-user/model/model_drama.bin')
+
+print("model_fci")
+global model_fci
 model_fci  = load_model('/home/ec2-user/model/rec_self_char_dense_drop-24-0.8882.hdf5')
+global wdim
 wdim=100
 reg_ex = re.compile(r'.*[?]([-=+,#/;:\\^$.@*\s\'\"~%&!\(\)\<\>])*$')
-graph = tf.get_default_graph()
 
 
 def featurize_charrnn_utt(corpus,maxcharlen):
-    global wdim
-    global model_ft
     rec_total = np.zeros((1,maxcharlen, wdim))
     s = corpus
     for j in range(len(s)):
-            if s[-j-1] in model_ft and j<maxcharlen:
-                rec_total[0,-j-1,:]=model_ft[s[-j-1]]
+        if s[-j-1] in model_ft and j<maxcharlen:
+            rec_total[0,-j-1,:]=model_ft[s[-j-1]]
     return rec_total
 
 def pred_only_text(s):
-    global graph
     global sess
-    global model_fci
-    set_session(sess)
-    with sess.as_default():
-        with graph.as_default():
-            rec = featurize_charrnn_utt(s, 80)
-            att=np.zeros((1,64))
-            z = model_fci.predict([rec,att])[0]
-            z = np.argmax(z)
-            y = int(z)
-            return z
+    global graph
+    with graph.as_default():
+        set_session(sess)
+        rec = featurize_charrnn_utt(s, 80)
+        att=np.zeros((1,64))
+        z = model_fci.predict([rec,att])[0]
+        z = np.argmax(z)
+        y = int(z)
+        return z
 
     print("error in 3i4k")
     return 0
 
 
 def is_question(s):
-    global reg_ex
     m = reg_ex.match(s)
     if m:
         return True
