@@ -25,10 +25,21 @@ from extractTime import todayTomorrow
 from extractDateNew import extractDate
 from pytz import timezone
 
+from keras.models import load_model
+from tensorflow import Graph, Session
+
 from NLP.entity_sentiment_v4 import DateTimeSentimentAnalyzer
 from NLP.date_time_tagger import dt_select
+from NLP.preprocessor import preprocess
 
-itt = ImageToText() # 말풍선 인식 모델 학습
+import numpy as np
+from gensim.models.wrappers import FastText
+import tensorflow as tf
+from keras.backend.tensorflow_backend import set_session
+from keras.models import load_model
+
+
+itt = ImageToText() # 말풍선 인식 모델
 dtsa = DateTimeSentimentAnalyzer(False)
 
 def extractDateTIme(status,text):
@@ -70,7 +81,61 @@ search_window = driver.find_element_by_name("content")  # search window
 print("크롬실행!")
 
 app = Flask (__name__)
- 
+
+config = tf.ConfigProto()
+print("session")
+sess = tf.Session(config=config)
+set_session(sess)
+
+print("graph")
+graph = tf.get_default_graph()
+#의도(질문인지 아닌지) 확인하는 코드
+print("model_ft")
+global modefl_ft
+model_ft = FastText.load_fasttext_format('/home/ec2-user/model/model_drama.bin')
+
+print("model_fci")
+global model_fci
+model_fci  = load_model('/home/ec2-user/model/rec_self_char_dense_drop-24-0.8882.hdf5')
+global wdim
+wdim=100
+reg_ex = re.compile(r'.*[?]([-=+,#/;:\\^$.@*\s\'\"~%&!\(\)\<\>])*$')
+
+
+def featurize_charrnn_utt(corpus,maxcharlen):
+    rec_total = np.zeros((1,maxcharlen, wdim))
+    s = corpus
+    for j in range(len(s)):
+        if s[-j-1] in model_ft and j<maxcharlen:
+            rec_total[0,-j-1,:]=model_ft[s[-j-1]]
+    return rec_total
+
+def pred_only_text(s):
+    global sess
+    global graph
+    with graph.as_default():
+        set_session(sess)
+        rec = featurize_charrnn_utt(s, 80)
+        att=np.zeros((1,64))
+        z = model_fci.predict([rec,att])[0]
+        z = np.argmax(z)
+        y = int(z)
+        return z
+
+    print("error in 3i4k")
+    return 0
+
+
+def is_question(s):
+    m = reg_ex.match(s)
+    if m:
+        return True
+    else:
+        if pred_only_text(s) == 2:
+            return True
+        else:
+            return False
+
 CORS(app, resources={r'*': {'origins': '*'}})
 
 @app.route('/main')
@@ -154,7 +219,7 @@ def crolling(file=None):
             search_window.send_keys(sentencesGroup)
             #맞춤법 검사버튼 클릭
             btn = driver.find_element_by_id("spell_check")
-            btn.click();
+            btn.click()
 
             time.sleep(0.5)
 
@@ -190,7 +255,13 @@ def crolling(file=None):
         
         text = resultText.split("\n")
         print(text)
-        result_dt = dt_select(dtsa.entity_sentiment_analyze(text))
+        text = dtsa.split_sentence_with_s(text)
+        text = preprocess(text)
+        print(text)
+        is_question_list = []
+        for tx in text:
+            is_question_list.append(is_question(tx))
+        result_dt = dt_select(dtsa.entity_sentiment_analyze(text, is_question_list))
         print(result_dt)
         
         if result_dt[0]!="" and result_dt[1]!="":

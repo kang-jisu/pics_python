@@ -17,7 +17,7 @@ class DateTimeSentimentAnalyzer:
         self.sent_analyzer = SentimentAnalyzer(usejk)
         self.result = []
         self.kkma = Kkma()
-        self.ia = IntentAnalyzer()
+        #self.ia = IntentAnalyzer()
         
     def split_sentence_with_ec(self, text):
         ret = []
@@ -76,15 +76,18 @@ class DateTimeSentimentAnalyzer:
 
         return ct
 
-    def entity_sentiment_analyze(self, sentences):
+    def entity_sentiment_analyze(self, sentences, is_question_list):
         #sentences : list of str
         result = []
         dt_before = []
         is_prev_q = False
-        sentences = self.split_sentence_with_s(sentences)
-        sentences = preprocess(sentences)
+        sentence_idx = 0
+        #sentences = self.split_sentence_with_s(sentences)
+        #sentences = preprocess(sentences)
         for i in sentences:
-            is_q = self.ia.is_question(i)
+            #is_q = self.ia.is_question(i)
+            is_q = is_question_list[sentence_idx]
+            sentence_idx+=1
             has_dt = len(datetime_recognizer(i))
             text = self.split_sentence_with_ec(i)
 
